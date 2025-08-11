@@ -1,10 +1,5 @@
-
 function App() {
-  
-
-  return (
-    <h1>React Tic-Tac-Toe</h1>
-  )
+	return <p>To be completed...</p>;
 }
 
-export default App
+export default App;
