@@ -6,15 +6,18 @@ const initialGameBoard = [
 	[null, null, null],
 ];
 
-const GameBoard = () => {
+const GameBoard = ({ activePlayer, onSelectCell }) => {
 	const [gameBoard, setGameBoard] = useState(initialGameBoard);
 
-	const handleSelectSquare = (value, rowIdx, cellIdx) => {
+	const handleSelectSquare = (rowIdx, cellIdx) => {
+		if (gameBoard[rowIdx][cellIdx]) return;
+
 		setGameBoard((gameBoard) => {
 			const updBoard = [...gameBoard.map((arr) => [...arr])];
-			updBoard[rowIdx][cellIdx] = value;
+			updBoard[rowIdx][cellIdx] = activePlayer;
 			return updBoard;
 		});
+		onSelectCell();
 	};
 
 	return (
@@ -27,7 +30,7 @@ const GameBoard = () => {
 								<button
 									type="button"
 									onClick={() =>
-										handleSelectSquare('X', rowIdx, cellIdx)
+										handleSelectSquare(rowIdx, cellIdx)
 									}
 								>
 									{gameBoard[rowIdx][cellIdx]}
