@@ -1,8 +1,13 @@
 import { useState } from 'react';
 
-const Player = ({ name, symbol, isActive }) => {
+const Player = ({ name, symbol, isActive, onSave }) => {
 	const [isEditing, setisEditing] = useState(false);
 	const [playerName, setPlayerName] = useState(name);
+
+	const handleClick = () => {
+		if (isEditing) onSave(symbol, playerName);
+		setisEditing(!isEditing);
+	};
 
 	return (
 		<li className={isActive ? 'active' : undefined}>
@@ -19,7 +24,7 @@ const Player = ({ name, symbol, isActive }) => {
 				)}
 				<span className="player-symbol">{symbol}</span>
 			</span>
-			<button onClick={() => setisEditing(!isEditing)}>
+			<button onClick={handleClick}>
 				{!isEditing ? 'Edit' : 'Save'}
 			</button>
 		</li>

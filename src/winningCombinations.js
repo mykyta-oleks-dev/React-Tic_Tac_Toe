@@ -60,3 +60,15 @@ export const isWin = (gameTurns) => {
 	}
 	return false;
 };
+
+export const getWinner = (gameTurns, players) => {
+	const isWon = isWin(gameTurns);
+	const isDraw = gameTurns.length === 9 && !isWon;
+	const winner = isWon
+		? players[gameTurns[0].player]
+		: isDraw
+		? 'draw'
+		: undefined;
+
+	return winner;
+};

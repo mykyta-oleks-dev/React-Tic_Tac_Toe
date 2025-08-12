@@ -2,7 +2,7 @@ import { useState } from 'react';
 import GameBoard from './components/GameBoard';
 import Log from './components/Log';
 import Player from './components/Player';
-import { isWin } from './winningCombinations';
+import { getWinner } from './winningCombinations';
 import GameOver from './components/GameOver';
 
 const deriveActivePlayer = (gameTurns) => {
@@ -12,18 +12,22 @@ const deriveActivePlayer = (gameTurns) => {
 	return activePlayer;
 };
 
+const INIT_PLAYERS = {
+	X: 'Player 1',
+	O: 'Player 2',
+};
+
 function App() {
+	const [players, setPlayers] = useState(INIT_PLAYERS);
 	const [gameTurns, setGameTurns] = useState([]);
 
 	const activePlayer = deriveActivePlayer(gameTurns);
-	const isWon = isWin(gameTurns);
-	const isDraw = gameTurns.length === 9 && !isWon;
-	const winner = isWon ? gameTurns[0].player : isDraw ? 'draw' : undefined;
+	const winner = getWinner(gameTurns, players);
 
 	const handleSelectSquare = (rowIdx, colIdx) => {
 		if (
 			gameTurns.find((t) => t.rowIdx === rowIdx && t.colIdx === colIdx) ||
-			isWon
+			winner
 		)
 			return;
 
@@ -41,19 +45,28 @@ function App() {
 		setGameTurns([]);
 	};
 
+	const handlePlayersChange = (symbol, name) => {
+		if (!(symbol in players)) return;
+		setPlayers((players) => {
+			return { ...players, [symbol]: name };
+		});
+	};
+
 	return (
 		<main>
 			<div id="game-container">
 				<ol id="players" className="highlight-player">
 					<Player
-						name="Player 1"
+						name={INIT_PLAYERS.X}
 						symbol="X"
 						isActive={activePlayer === 'X'}
+						onSave={handlePlayersChange}
 					/>
 					<Player
-						name="Player 2"
+						name={INIT_PLAYERS.O}
 						symbol="O"
 						isActive={activePlayer === 'O'}
+						onSave={handlePlayersChange}
 					/>
 				</ol>
 				{winner && <GameOver winner={winner} onReset={resetGame} />}
