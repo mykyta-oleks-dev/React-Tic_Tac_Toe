@@ -5,7 +5,7 @@ const initialGameBoard = [
 ];
 
 const GameBoard = ({ turns, handleSelectSquare }) => {
-	const gameBoard = initialGameBoard;
+	const gameBoard = [...initialGameBoard.map(row => [...row])];
 	for (const t of turns) {
 		gameBoard[t.rowIdx][t.colIdx] = t.player;
 	}

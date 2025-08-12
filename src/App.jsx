@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import GameBoard from './components/GameBoard';
-import Player from './components/Player';
 import Log from './components/Log';
+import Player from './components/Player';
 import { isWin } from './winningCombinations';
+import GameOver from './components/GameOver';
 
 const deriveActivePlayer = (gameTurns) => {
 	let activePlayer = 'X';
@@ -16,6 +17,8 @@ function App() {
 
 	const activePlayer = deriveActivePlayer(gameTurns);
 	const isWon = isWin(gameTurns);
+	const isDraw = gameTurns.length === 9 && !isWon;
+	const winner = isWon ? gameTurns[0].player : isDraw ? 'draw' : undefined;
 
 	const handleSelectSquare = (rowIdx, colIdx) => {
 		if (
@@ -34,6 +37,10 @@ function App() {
 		});
 	};
 
+	const resetGame = () => {
+		setGameTurns([]);
+	};
+
 	return (
 		<main>
 			<div id="game-container">
@@ -49,9 +56,7 @@ function App() {
 						isActive={activePlayer === 'O'}
 					/>
 				</ol>
-				{isWon && (
-					<p>Congratulations, {gameTurns[0].player}, you have won</p>
-				)}
+				{winner && <GameOver winner={winner} onReset={resetGame} />}
 				<GameBoard
 					turns={gameTurns}
 					handleSelectSquare={handleSelectSquare}
